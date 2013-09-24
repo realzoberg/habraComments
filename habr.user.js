@@ -37,7 +37,6 @@ var maxBadCommentRating = -7;
 
         $(".comment_item").each(function(){
           var commentRating = $(".score", this)[0].innerText.replace("–","-").replace("+","");
-            console.log(commentRating)
     
           if(commentRating > minGoodCommentRating)
           {
