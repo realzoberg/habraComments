@@ -7,6 +7,9 @@
 // @include http://habrahabr.ru/*
 // ==/UserScript==
 // [1] Оборачиваем скрипт в замыкание, для кроссбраузерности (opera, ie)
+var minGoodCommentRating = 7;
+var maxBadCommentRating = -7;
+
 (function (window, undefined) {  // [2] нормализуем window
     var w;
     if (typeof unsafeWindow != undefined) {
@@ -33,15 +36,15 @@
         var commentsList = $(".comments_list");
 
         $(".comment_item").each(function(){
-          var commentRating = $(".score", this).text().replace("–","-");
-          
-          if(commentRating > 7)
+          var commentRating = $(".score", this)[0].innerText.replace("–","-");
+    
+          if(commentRating > minGoodCommentRating)
           {
             var _elementClone = $(this).clone();
             $(".reply_form_placeholder", _elementClone).remove();
             bestComments.push(_elementClone); 
           }
-          else if(commentRating < -7)
+          else if(commentRating < -maxBadCommentRating)
           {
             var _elementClone = $(this).clone();
             $(".reply_form_placeholder", _elementClone).remove();
@@ -51,9 +54,9 @@
         });
 
         var sortFunction = function(a, b){
-          if( $(".score",a).text().replace("–","-") < $(".score",b).text().replace("–","-") )
+          if( $(".score",a)[0].innerText.replace("–","-") < $(".score",b)[0].innerText.replace("–","-") )
             return -1;
-          if( $(".score",a).text().replace("–","-") > $(".score",b).text().replace("–","-") )
+          if( $(".score",a)[0].innerText.replace("–","-") > $(".score",b)[0].innerText.replace("–","-") )
             return 1; 
           return 0;
         };
