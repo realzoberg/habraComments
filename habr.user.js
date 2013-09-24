@@ -36,7 +36,8 @@ var maxBadCommentRating = -7;
         var commentsList = $(".comments_list");
 
         $(".comment_item").each(function(){
-          var commentRating = $(".score", this)[0].innerText.replace("–","-");
+          var commentRating = $(".score", this)[0].innerText.replace("–","-").replace("+","");
+            console.log(commentRating)
     
           if(commentRating > minGoodCommentRating)
           {
@@ -44,13 +45,13 @@ var maxBadCommentRating = -7;
             $(".reply_form_placeholder", _elementClone).remove();
             bestComments.push(_elementClone); 
           }
-          else if(commentRating < -maxBadCommentRating)
+          else if(commentRating < maxBadCommentRating)
           {
             var _elementClone = $(this).clone();
             $(".reply_form_placeholder", _elementClone).remove();
             badComments.push(_elementClone); 
           }
-          else $(".score", this)[0].innerText="";
+          else $(".score", this).text("");
         });
 
         var sortFunction = function(a, b){
