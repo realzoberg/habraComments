@@ -1,6 +1,6 @@
 // ==UserScript==
-// @name myUserJS
-// @description Мой самый первый юзерскрипт 
+// @name habrUserJS
+// @description модификация отображения комментариев на хабрахабре habrahabr
 // @author Ruslan Login
 // @license MIT
 // @version 1.0
@@ -32,19 +32,22 @@
         var badComments = [];
         var commentsList = $(".comments_list");
 
-        $(".score").each(function(){
-          var commentRating = $(this).text().replace("–","-");
-          var comment = $(this).parent().parent().parent().parent().parent();
+        $(".comment_item").each(function(){
+          var commentRating = $(".score", this).text().replace("–","-");
           
           if(commentRating > 7)
           {
-            bestComments.push(comment.clone()); 
+            var _elementClone = $(this).clone();
+            $(".reply_form_placeholder", _elementClone).remove();
+            bestComments.push(_elementClone); 
           }
           else if(commentRating < -7)
           {
-            badComments.push(comment.clone()); 
+            var _elementClone = $(this).clone();
+            $(".reply_form_placeholder", _elementClone).remove();
+            badComments.push(_elementClone); 
           }
-          else $(this).text("");
+          else $(".score", this).text("");
         });
 
         var sortFunction = function(a, b){
