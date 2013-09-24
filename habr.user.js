@@ -50,7 +50,7 @@ var maxBadCommentRating = -7;
             $(".reply_form_placeholder", _elementClone).remove();
             badComments.push(_elementClone); 
           }
-          else $(".score", this).text("");
+          else $(".score", this)[0].innerText="";
         });
 
         var sortFunction = function(a, b){
