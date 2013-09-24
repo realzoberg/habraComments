@@ -35,22 +35,20 @@ var maxBadCommentRating = -7;
         var badComments = [];
         var commentsList = $(".comments_list");
 
-        $(".comment_item").each(function(){
+        $(".comment_item").each(function(){   
           var commentRating = $(".score", this)[0].innerText.replace("–","-").replace("+","");
-    
-          if(commentRating > minGoodCommentRating)
+          if(commentRating >= minGoodCommentRating)
           {
             var _elementClone = $(this).clone();
             $(".reply_form_placeholder", _elementClone).remove();
             bestComments.push(_elementClone); 
           }
-          else if(commentRating < maxBadCommentRating)
+          else if(commentRating <= maxBadCommentRating)
           {
             var _elementClone = $(this).clone();
             $(".reply_form_placeholder", _elementClone).remove();
             badComments.push(_elementClone); 
           }
-          else $(".score", this).text("");
         });
 
         var sortFunction = function(a, b){
@@ -72,6 +70,12 @@ var maxBadCommentRating = -7;
         commentsList.append("<div><h1>Худшие комментарии:</h1></div><br>");
         badComments.forEach(function(element){
           commentsList.append(element);
+        });
+        
+        $(".score").each(function(){
+            var commentRating = $(this).text().replace("–","-").replace("+","");
+            if(commentRating > maxBadCommentRating && commentRating < minGoodCommentRating)
+                $(this).text("");
         });
     }
 })(window);
