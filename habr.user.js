@@ -36,7 +36,7 @@ var maxBadCommentRating = -7;
         var commentsList = $(".comments_list");
 
         $(".comment_item").each(function(){   
-          var commentRating = $(".score", this)[0].innerText.replace("–","-").replace("+","");
+          var commentRating = parseInt($(".score", this)[0].innerText.replace("–","-").replace("+",""));
           if(commentRating >= minGoodCommentRating)
           {
             var _elementClone = $(this).clone();
@@ -52,9 +52,9 @@ var maxBadCommentRating = -7;
         });
 
         var sortFunction = function(a, b){
-          if( $(".score",a)[0].innerText.replace("–","-") < $(".score",b)[0].innerText.replace("–","-") )
+          if( parseInt($(".score",a)[0].innerText.replace("–","-")) < parseInt($(".score",b)[0].innerText.replace("–","-")) )
             return -1;
-          if( $(".score",a)[0].innerText.replace("–","-") > $(".score",b)[0].innerText.replace("–","-") )
+          if( parseInt($(".score",a)[0].innerText.replace("–","-")) > parseInt($(".score",b)[0].innerText.replace("–","-")) )
             return 1; 
           return 0;
         };
@@ -73,7 +73,7 @@ var maxBadCommentRating = -7;
         });
         
         $(".score").each(function(){
-            var commentRating = $(this).text().replace("–","-").replace("+","");
+            var commentRating = parseInt($(this).text().replace("–","-").replace("+",""));
             if(commentRating > maxBadCommentRating && commentRating < minGoodCommentRating)
                 $(this).text("");
         });
