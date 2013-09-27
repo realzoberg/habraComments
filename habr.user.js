@@ -67,6 +67,8 @@ var maxBadCommentRating = -7;
 
         var bestCommentsContainer = $("<div class='best_comments'>")
         	.append("<div><h1>Лучшие комментарии:</h1></div><br>");
+        if(!bestComments.length)
+            bestCommentsContainer.append("<div><h2>все комментарии к этому посту имеют рейтинг < " + minGoodCommentRating + "</h2></div><br>");	
         bestComments.forEach(function(element){
           bestCommentsContainer.append(element);
         });
