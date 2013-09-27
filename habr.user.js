@@ -72,7 +72,7 @@ var maxBadCommentRating = -7;
           commentsList.append(element);
         });
         
-        $(".score").each(function(){
+        $(".comment_item > .score").each(function(){
             var commentRating = parseInt($(this).text().replace("–","-").replace("+",""));
             if(commentRating > maxBadCommentRating && commentRating < minGoodCommentRating)
                 $(this).text("");
