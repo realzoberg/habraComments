@@ -3,7 +3,7 @@
 // @description модификация отображения комментариев на хабрахабре habrahabr
 // @author Ruslan Login
 // @license MIT
-// @version 1.2
+// @version 1.0
 // @include http://habrahabr.ru/*
 // ==/UserScript==
 // [1] Оборачиваем скрипт в замыкание, для кроссбраузерности (opera, ie)
