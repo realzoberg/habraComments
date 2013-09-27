@@ -3,7 +3,7 @@
 // @description модификация отображения комментариев на хабрахабре habrahabr
 // @author Ruslan Login
 // @license MIT
-// @version 1.0
+// @version 1.2
 // @include http://habrahabr.ru/*
 // ==/UserScript==
 // [1] Оборачиваем скрипт в замыкание, для кроссбраузерности (opera, ie)
@@ -63,13 +63,13 @@ var maxBadCommentRating = -7;
         bestComments.sort(sortFunction).reverse();
         badComments.sort(sortFunction);
 
-        var bestCommentsContainer = $("<div>")
+        var bestCommentsContainer = $("<div id='best_comments'>")
         	.append("<div><h1>Лучшие комментарии:</h1></div><br>");
         bestComments.forEach(function(element){
           bestCommentsContainer.append(element);
         });
 
-        var badCommentsContainer = $("<div>")
+        var badCommentsContainer = $("<div class='worst_comments'>")
         	.append("<div><h1>Худшие комментарии:</h1></div><br>");
         if(!badComments.length)
             badCommentsContainer.append("<div><h2>все комментарии к этому посту имеют рейтинг > " + maxBadCommentRating + "</h2></div><br>");
@@ -85,5 +85,27 @@ var maxBadCommentRating = -7;
             if(commentRating > maxBadCommentRating && commentRating < minGoodCommentRating)
                 $(this).text("");
         });
+        
+        $(".comment_body").each(function(){
+            var self = this;
+            var commentReply = $(".reply_comments", $(this).parent());
+            
+            if( commentReply.text() !== "\n	")
+            {
+                $(this).parent().append("<div class = '.reply_filler'><br/></div>");
+                
+                var toggleReplyTitle = "скрыть ответы";
+                var hideCommentTreeContainer = $("<div class='reply'>")
+                    .append("<a href='#hide' class='reply_link hide_link'>" + toggleReplyTitle + "</a>").appendTo($(this));
+                $(".hide_link", hideCommentTreeContainer).click(function(){
+                    commentReply.toggle();
+                    (toggleReplyTitle == "скрыть ответы") ? toggleReplyTitle = "показать ответы" : toggleReplyTitle = "скрыть ответы";
+                    $(this).text(toggleReplyTitle);
+                    $(".reply_filler", $(self).parent()).toggle();
+                });
+            }
+        });
+        
+        $(".comment_body > .reply").css("display", "inline");
     }
 })(window);
