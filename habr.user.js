@@ -3,7 +3,7 @@
 // @description модификация отображения комментариев на хабрахабре habrahabr
 // @author Ruslan Login
 // @license MIT
-// @version 1.0
+// @version 1.2
 // @include http://habrahabr.ru/*
 // ==/UserScript==
 // [1] Оборачиваем скрипт в замыкание, для кроссбраузерности (opera, ie)
@@ -35,8 +35,9 @@ var maxBadCommentRating = -7;
         var badComments = [];
         var commentsList = $(".comments_list");
 
-        $(".comment_item").each(function(){   
-          var commentRating = parseInt($(".score", this)[0].innerText.replace("–","-").replace("+",""));
+        $(".comment_item").each(function(){
+          console.log($(".score", this))
+          var commentRating = parseInt($($(".score", this)[0]).text().replace("–","-").replace("+",""));
           if(commentRating >= minGoodCommentRating)
           {
             var _elementClone = $(this).clone();
@@ -52,25 +53,32 @@ var maxBadCommentRating = -7;
         });
 
         var sortFunction = function(a, b){
-          if( parseInt($(".score",a)[0].innerText.replace("–","-")) < parseInt($(".score",b)[0].innerText.replace("–","-")) )
+          if( parseInt($($(".score",a)[0]).text().replace("–","-")) < parseInt($($(".score",b)[0]).text().replace("–","-")) )
             return -1;
-          if( parseInt($(".score",a)[0].innerText.replace("–","-")) > parseInt($(".score",b)[0].innerText.replace("–","-")) )
+          if( parseInt($($(".score",a)[0]).text().replace("–","-")) > parseInt($($(".score",b)[0]).text().replace("–","-")) )
             return 1; 
           return 0;
         };
 
-        bestComments.sort(sortFunction);
+        bestComments.sort(sortFunction).reverse();
         badComments.sort(sortFunction);
 
+        var bestCommentsContainer = $("<div>")
+        	.append("<div><h1>Лучшие комментарии:</h1></div><br>");
         bestComments.forEach(function(element){
-          commentsList.prepend(element);
+          bestCommentsContainer.append(element);
         });
-        commentsList.prepend("<div><h1>Лучшие комментарии:</h1></div><br>");
 
-        commentsList.append("<div><h1>Худшие комментарии:</h1></div><br>");
+        var badCommentsContainer = $("<div>")
+        	.append("<div><h1>Худшие комментарии:</h1></div><br>");
+        if(!badComments.length)
+            badCommentsContainer.append("<div><h2>все комментарии к этому посту имеют рейтинг > " + maxBadCommentRating + "</h2></div><br>");
         badComments.forEach(function(element){
-          commentsList.append(element);
+          badCommentsContainer.append(element);
         });
+        
+        commentsList.prepend(badCommentsContainer);
+        commentsList.prepend(bestCommentsContainer);
         
         $(".comment_item > .score").each(function(){
             var commentRating = parseInt($(this).text().replace("–","-").replace("+",""));
