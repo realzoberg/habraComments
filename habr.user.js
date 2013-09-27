@@ -31,6 +31,8 @@ var maxBadCommentRating = -7;
     // [4] дополнительная проверка наряду с @include
     if (/http:\/\/habrahabr.ru/.test(w.location.href)) {
         //Ниже идёт непосредственно код скрипта
+        
+        // составление рейтинга лучших и худших комментариев
         var bestComments = [];
         var badComments = [];
         var commentsList = $(".comments_list");
@@ -63,7 +65,7 @@ var maxBadCommentRating = -7;
         bestComments.sort(sortFunction).reverse();
         badComments.sort(sortFunction);
 
-        var bestCommentsContainer = $("<div id='best_comments'>")
+        var bestCommentsContainer = $("<div class='best_comments'>")
         	.append("<div><h1>Лучшие комментарии:</h1></div><br>");
         bestComments.forEach(function(element){
           bestCommentsContainer.append(element);
@@ -80,11 +82,25 @@ var maxBadCommentRating = -7;
         commentsList.prepend(badCommentsContainer);
         commentsList.prepend(bestCommentsContainer);
         
+        // скрытие рейтига у обычных комментариев
         $(".comment_item > .score").each(function(){
             var commentRating = parseInt($(this).text().replace("–","-").replace("+",""));
             if(commentRating > maxBadCommentRating && commentRating < minGoodCommentRating)
                 $(this).text("");
         });
+        
+        // добавление ссылки скрыть/показать ответы
+        $(".best_comments > .comment_item > .reply_comments").hide();
+        $(".worst_comments > .comment_item > .reply_comments").hide();
+        
+        var updateShowHideAnswersText = function()
+        {
+            $(".comment_item").each(function(){
+                var replyComment = $(".reply_comments", this);
+            	var toggleReplyTitle = (replyComment.css("display")=="none") ?  "показать ответы" : "скрыть ответы";
+            	$(".hide_link", this).text(toggleReplyTitle);
+            });
+        }
         
         $(".comment_body").each(function(){
             var self = this;
@@ -93,19 +109,19 @@ var maxBadCommentRating = -7;
             if( commentReply.text() !== "\n	")
             {
                 $(this).parent().append("<div class = '.reply_filler'><br/></div>");
-                
-                var toggleReplyTitle = "скрыть ответы";
+                var toggleReplyTitle = (commentReply.css("display")=="none") ?  "показать ответы" :  "скрыть ответы";
                 var hideCommentTreeContainer = $("<div class='reply'>")
                     .append("<a href='#hide' class='reply_link hide_link'>" + toggleReplyTitle + "</a>").appendTo($(this));
                 $(".hide_link", hideCommentTreeContainer).click(function(){
                     commentReply.toggle();
-                    (toggleReplyTitle == "скрыть ответы") ? toggleReplyTitle = "показать ответы" : toggleReplyTitle = "скрыть ответы";
-                    $(this).text(toggleReplyTitle);
                     $(".reply_filler", $(self).parent()).toggle();
+                    
+                    updateShowHideAnswersText();
                 });
             }
         });
         
         $(".comment_body > .reply").css("display", "inline");
+        
     }
 })(window);
